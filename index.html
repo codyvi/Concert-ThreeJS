@@ -1,19 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
-    integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
-    crossorigin="anonymous" defer>
-  </script>
-    <script src="app.js"></script>
-    <title>Document</title>
-</head>
-<body>
-    <canvas id="glCanvas" width="640" height="480"></canvas>
+<html>
+  <head>
+    <title>threejs</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      canvas {
+        background: red;
+      }
+    </style>
+    <script src="https://threejs.org/build/three.js"></script>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+    <script type="module">
+      var renderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById("myCanvas"),
+        antialias: true,
+      });
+      renderer.setClearColor(0x00ff00);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      var camera = new THREE.PerspectiveCamera(
+        35,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        3000
+      );
+
+      var scene = new THREE.Scene();
+
+      // Ambient lights
+      var light = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(light);
+      // Point light
+      var light1 = new THREE.PointLight(0xffffff, 0.5);
+      scene.add(light1);
+
+      const verticesOfCube = [
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        1,
+        1,
+        1,
+        1,
+        -1,
+        1,
+        1,
+      ];
+
+      const indicesOfFaces = [
+        2,
+        1,
+        0,
+        0,
+        3,
+        2,
+        0,
+        4,
+        7,
+        7,
+        3,
+        0,
+        0,
+        1,
+        5,
+        5,
+        4,
+        0,
+        1,
+        2,
+        6,
+        6,
+        5,
+        1,
+        2,
+        3,
+        7,
+        7,
+        6,
+        2,
+        4,
+        5,
+        6,
+        6,
+        7,
+        4,
+      ];
+
+      const geometry = new THREE.PolyhedronGeometry(
+        verticesOfCube,
+        indicesOfFaces,
+        100,
+        100
+      );
+      var material = new THREE.MeshLambertMaterial({ color: 0xf342ff });
+      var mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(0, 0, -1000);
+      scene.add(mesh);
+
+      render();
+
+      function render() {
+        mesh.rotation.x += 0.01;
+        mesh.rotation.y += 0.01;
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+      }
+    </script>
   </body>
 </html>
-
-
