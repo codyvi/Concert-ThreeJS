@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Concert</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -42,44 +42,95 @@
 
         // Create plane
         var plane = new THREE.BoxGeometry(100, 1,100);
-        var materialPlane = new THREE.MeshLambertMaterial({color: 0xFFCC00})
+        var materialPlane = new THREE.MeshLambertMaterial({color: 0x7cfc00 })
         var meshPlane = new THREE.Mesh(plane, materialPlane)
         scene.add(meshPlane);
+
         // Create the scene of the concert
         var escenarioBase = new THREE.BoxGeometry(80,1,25);
         var materialEscenario = new THREE.MeshLambertMaterial({color: 0x000000}) 
         var meshEscenario = new THREE.Mesh(escenarioBase, materialEscenario);
         meshEscenario.position.set(1,1,-35)
         scene.add(meshEscenario)
+
         // Create the scene back
         var escenarioAtras = new THREE.BoxGeometry(80,1,25);
         var materialEscenarioAtras = new THREE.MeshLambertMaterial({color: 0x000000}) 
         var meshEscenarioAtras = new THREE.Mesh(escenarioAtras, materialEscenarioAtras);
         meshEscenarioAtras.position.set(1,12,-48)
         meshEscenarioAtras.rotation.x = Math.PI / 2;
-        scene.add(meshEscenarioAtras)
+        scene.add(meshEscenarioAtras);
+
         // Create the scene top
         var escenarioBaseSuperior = new THREE.BoxGeometry(80,1,25);
-        var materialEscenarioSuperior = new THREE.MeshLambertMaterial({color: 0x000000}) 
+        var materialEscenarioSuperior = new THREE.MeshLambertMaterial({color: 0x000000}); 
         var meshEscenarioSuperior = new THREE.Mesh(escenarioBaseSuperior, materialEscenarioSuperior);
-        meshEscenarioSuperior.position.set(1,25,-35)
-        scene.add(meshEscenarioSuperior)
+        meshEscenarioSuperior.position.set(1,25,-35);
+        scene.add(meshEscenarioSuperior);
 
         // Left Column
         var escenarioPilarIzq = new THREE.BoxGeometry(5,5,25);
-        var materialPilzarIzq = new THREE.MeshLambertMaterial({color: 0xFFCC00}) 
+        var materialPilzarIzq = new THREE.MeshLambertMaterial({color: 0xFFCC00}); 
         var meshPilarIzq = new THREE.Mesh(escenarioPilarIzq, materialPilzarIzq);
-        meshPilarIzq.position.set(-36,12,-26)
+        meshPilarIzq.position.set(-36,12,-26);
         meshPilarIzq.rotation.x = Math.PI / 2;
-        scene.add(meshPilarIzq)
+        scene.add(meshPilarIzq);
+
+        // Left Light
+        var escenarioLuzIzq = new THREE.BoxGeometry(5,4,5);
+        var materialLuzIzq = new THREE.MeshLambertMaterial({color: 0xFFFF00}); 
+        var meshLuzIzq = new THREE.Mesh(escenarioLuzIzq, materialLuzIzq);
+        meshLuzIzq.position.set(-36,15,-24);
+        meshLuzIzq.rotation.x = Math.PI / 2;
+        scene.add(meshLuzIzq);
+
+        // Right Light
+        var escenarioLuzDer = new THREE.BoxGeometry(5,4,5);
+        var materialLuzDer = new THREE.MeshLambertMaterial({color: 0xFFFF00}); 
+        var meshLuzDer = new THREE.Mesh(escenarioLuzDer, materialLuzDer);
+        meshLuzDer.position.set(38,15,-24);
+        meshLuzDer.rotation.x = Math.PI / 2;
+        scene.add(meshLuzDer);
 
         // Right Column
         var escenarioPilarIzq = new THREE.BoxGeometry(5,5,25);
-        var materialPilzarIzq = new THREE.MeshLambertMaterial({color: 0xFFCC00}) 
+        var materialPilzarIzq = new THREE.MeshLambertMaterial({color: 0xFFCC00});
         var meshPilarIzq = new THREE.Mesh(escenarioPilarIzq, materialPilzarIzq);
-        meshPilarIzq.position.set(38,12,-26)
+        meshPilarIzq.position.set(38,12,-26);
         meshPilarIzq.rotation.x = Math.PI / 2;
-        scene.add(meshPilarIzq)
+        scene.add(meshPilarIzq);
+
+        // Left Speaker Circler
+        var leftSpeakerCircle = new THREE.SphereGeometry( 3, 9, 3 );
+        var leftSpeakerCircleMaterial = new THREE.MeshLambertMaterial( {color: 0xFFFFFF} );
+        var leftSpeakerCircleMesh = new THREE.Mesh( leftSpeakerCircle, leftSpeakerCircleMaterial );
+        leftSpeakerCircleMesh.position.set(38,5,-19)
+        leftSpeakerCircleMesh.rotation.x = Math.PI / 2;
+        scene.add( leftSpeakerCircleMesh );
+
+        // Left Speaker
+        var bocinaIzq = new THREE.BoxGeometry(5,5,10);
+        var materialBocinaIzq = new THREE.MeshLambertMaterial({color: 0x000});
+        var meshBocinaIzq = new THREE.Mesh(bocinaIzq, materialBocinaIzq);
+        meshBocinaIzq.position.set(38,5,-20);
+        meshBocinaIzq.rotation.x = Math.PI / 2;
+        scene.add(meshBocinaIzq);
+
+        // Left Speaker Circler
+        var righSpeakerCircle = new THREE.SphereGeometry( 3, 9, 3 );
+        var righSpeakerCircleMaterial = new THREE.MeshLambertMaterial( {color: 0xFFFFFF} );
+        var righSpeakerCircleMesh = new THREE.Mesh( righSpeakerCircle, righSpeakerCircleMaterial );
+        righSpeakerCircleMesh.position.set(-36,5,-19)
+        righSpeakerCircleMesh.rotation.x = Math.PI / 2;
+        scene.add( righSpeakerCircleMesh );
+
+        // Right Speaker
+        var bocinaDerecha = new THREE.BoxGeometry(5,5,10);
+        var materialBocinaDerecha = new THREE.MeshLambertMaterial({color: 0x000});
+        var meshBocinaDerecha = new THREE.Mesh(bocinaIzq, materialBocinaIzq);
+        meshBocinaDerecha.position.set(-36,5,-20);
+        meshBocinaDerecha.rotation.x = Math.PI / 2;
+        scene.add(meshBocinaDerecha);
 
         // Create the light of the scene
         var light = new THREE.PointLight(0xFFFFFF,1,500);
