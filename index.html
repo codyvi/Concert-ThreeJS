@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
     <script type="module">
         import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js'; 
+        import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/OBJLoader.js';
         let scene = new THREE.Scene();
         let camera = new THREE.PerspectiveCamera(
             75,
@@ -42,9 +43,13 @@
 
         // Create plane
         var plane = new THREE.BoxGeometry(100, 1,100);
-        var materialPlane = new THREE.MeshLambertMaterial({color: 0x7cfc00 })
+        const texture = new THREE.TextureLoader().load( 'assets/grass.jpg' );
+        //var materialPlane = new THREE.MeshLambertMaterial({color: 0x7cfc00 });
+        var materialPlane = new THREE.MeshBasicMaterial({map: texture });
         var meshPlane = new THREE.Mesh(plane, materialPlane)
         scene.add(meshPlane);
+
+
 
         // Create the scene of the concert
         var escenarioBase = new THREE.BoxGeometry(80,1,25);
@@ -136,6 +141,13 @@
         var light = new THREE.PointLight(0xFFFFFF,1,500);
         light.position.set(100,100,25);
         scene.add(light)
+
+        //Object Loader
+
+        var objLoader = new OBJLoader();
+        objLoader.load('/assets/People.obj', function(object){
+            //scene.add(object);
+        })
         
         // Render function
         var render =  function(){
