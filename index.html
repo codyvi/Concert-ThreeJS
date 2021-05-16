@@ -13,6 +13,9 @@
     <script type="module">
         import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js'; 
         import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/OBJLoader.js';
+        import { MTLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/MTLLoader.js';
+
+        
         let scene = new THREE.Scene();
         let camera = new THREE.PerspectiveCamera(
             75,
@@ -24,6 +27,11 @@
         camera.position.z = 105;
         camera.position.y = 5;
         camera.position.x= 5;
+
+       
+
+
+
         let renderer = new THREE.WebGLRenderer({antialias: true});
         renderer.setClearColor("#e5e5e5");
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -43,17 +51,32 @@
 
         // Create plane
         var plane = new THREE.BoxGeometry(100, 1,100);
-        const texture = new THREE.TextureLoader().load( 'assets/grass.jpg' );
+        const texturePlane = new THREE.TextureLoader().load( 'assets/grass.jpg' );
         //var materialPlane = new THREE.MeshLambertMaterial({color: 0x7cfc00 });
-        var materialPlane = new THREE.MeshBasicMaterial({map: texture });
+        var materialPlane = new THREE.MeshBasicMaterial({map: texturePlane });
         var meshPlane = new THREE.Mesh(plane, materialPlane)
         scene.add(meshPlane);
+
+        //Object Loader
+        var mtlLoader = new MTLLoader();
+	    mtlLoader.load("/assets/Tent_Poles_01.mtl", function(materials){
+            materials.preload();
+            var objLoader = new OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.load('/assets/Tent_Poles_01.obj', function(object){
+                console.log('Object:')
+                console.log(object);
+                //scene.add(object);
+                //object.position.set(-5, 0, 4);
+            });
+        });
 
 
 
         // Create the scene of the concert
         var escenarioBase = new THREE.BoxGeometry(80,1,25);
-        var materialEscenario = new THREE.MeshLambertMaterial({color: 0x000000}) 
+        const textureBase = new THREE.TextureLoader().load( 'assets/concert_plane.jpg' );
+        var materialEscenario = new THREE.MeshBasicMaterial({map: textureBase });
         var meshEscenario = new THREE.Mesh(escenarioBase, materialEscenario);
         meshEscenario.position.set(1,1,-35)
         scene.add(meshEscenario)
@@ -64,6 +87,7 @@
         var meshEscenarioAtras = new THREE.Mesh(escenarioAtras, materialEscenarioAtras);
         meshEscenarioAtras.position.set(1,12,-48)
         meshEscenarioAtras.rotation.x = Math.PI / 2;
+        console.log(meshEscenarioAtras);
         scene.add(meshEscenarioAtras);
 
         // Create the scene top
@@ -75,23 +99,33 @@
 
         // Left Column
         var escenarioPilarIzq = new THREE.BoxGeometry(5,5,25);
-        var materialPilzarIzq = new THREE.MeshLambertMaterial({color: 0xFFCC00}); 
+        var ColumnMaterials = [
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal2.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal2.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal.jpg' ), side: THREE.DoubleSide}),
+        ]
+        var materialPilzarIzq = new THREE.MeshFaceMaterial(ColumnMaterials);
         var meshPilarIzq = new THREE.Mesh(escenarioPilarIzq, materialPilzarIzq);
         meshPilarIzq.position.set(-36,12,-26);
         meshPilarIzq.rotation.x = Math.PI / 2;
         scene.add(meshPilarIzq);
 
         // Left Light
-        var escenarioLuzIzq = new THREE.BoxGeometry(5,4,5);
-        var materialLuzIzq = new THREE.MeshLambertMaterial({color: 0xFFFF00}); 
+        var escenarioLuzIzq = new THREE.BoxGeometry(4,4,5);
+        const textureLuzIzq = new THREE.TextureLoader().load( 'assets/luz.png' );
+        var materialLuzIzq = new THREE.MeshBasicMaterial({map: textureLuzIzq });
         var meshLuzIzq = new THREE.Mesh(escenarioLuzIzq, materialLuzIzq);
         meshLuzIzq.position.set(-36,15,-24);
         meshLuzIzq.rotation.x = Math.PI / 2;
         scene.add(meshLuzIzq);
 
         // Right Light
-        var escenarioLuzDer = new THREE.BoxGeometry(5,4,5);
-        var materialLuzDer = new THREE.MeshLambertMaterial({color: 0xFFFF00}); 
+        var escenarioLuzDer = new THREE.BoxGeometry(4,4,5);
+        const textureLuzDer = new THREE.TextureLoader().load( 'assets/luz.png' );
+        var materialLuzDer = new THREE.MeshBasicMaterial({map: textureLuzDer });
         var meshLuzDer = new THREE.Mesh(escenarioLuzDer, materialLuzDer);
         meshLuzDer.position.set(38,15,-24);
         meshLuzDer.rotation.x = Math.PI / 2;
@@ -99,39 +133,69 @@
 
         // Right Column
         var escenarioPilarIzq = new THREE.BoxGeometry(5,5,25);
-        var materialPilzarIzq = new THREE.MeshLambertMaterial({color: 0xFFCC00});
-        var meshPilarIzq = new THREE.Mesh(escenarioPilarIzq, materialPilzarIzq);
+        var ColumnMaterials = [
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal2.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal2.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal.jpg' ), side: THREE.DoubleSide}),
+            new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load( 'assets/metal.jpg' ), side: THREE.DoubleSide}),
+        ]
+        var escenarioMaterial = new THREE.MeshFaceMaterial(ColumnMaterials);
+        var meshPilarIzq = new THREE.Mesh(escenarioPilarIzq, escenarioMaterial);
         meshPilarIzq.position.set(38,12,-26);
         meshPilarIzq.rotation.x = Math.PI / 2;
         scene.add(meshPilarIzq);
 
-        // Left Speaker Circler
-        var leftSpeakerCircle = new THREE.SphereGeometry( 3, 9, 3 );
-        var leftSpeakerCircleMaterial = new THREE.MeshLambertMaterial( {color: 0xFFFFFF} );
+        // Left Speaker Circle
+        var leftSpeakerCircle = new THREE.SphereGeometry( 2, 9, 4 );
+        const textureLeftSpeakerCircle = new THREE.TextureLoader().load( 'assets/speaker_circle.jpg' );
+        var leftSpeakerCircleMaterial = new THREE.MeshBasicMaterial({map: textureLeftSpeakerCircle });
         var leftSpeakerCircleMesh = new THREE.Mesh( leftSpeakerCircle, leftSpeakerCircleMaterial );
-        leftSpeakerCircleMesh.position.set(38,5,-19)
+        leftSpeakerCircleMesh.position.set(38,3,-19)
         leftSpeakerCircleMesh.rotation.x = Math.PI / 2;
         scene.add( leftSpeakerCircleMesh );
 
+        // Left Speaker Circle Down
+        var leftSpeakerCircleDown = new THREE.SphereGeometry( 2, 9, 4 );
+        const textureLeftSpeakerCircleDown = new THREE.TextureLoader().load( 'assets/speaker_circle.jpg' );
+        var leftSpeakerCircleMaterialDown = new THREE.MeshBasicMaterial({map: textureLeftSpeakerCircleDown });
+        var leftSpeakerCircleMeshDown = new THREE.Mesh( leftSpeakerCircleDown, leftSpeakerCircleMaterialDown );
+        leftSpeakerCircleMeshDown.position.set(38,6,-19)
+        leftSpeakerCircleMeshDown.rotation.x = Math.PI / 2;
+        scene.add( leftSpeakerCircleMeshDown );
+
         // Left Speaker
         var bocinaIzq = new THREE.BoxGeometry(5,5,10);
-        var materialBocinaIzq = new THREE.MeshLambertMaterial({color: 0x000});
+        const textureBocinaIzq = new THREE.TextureLoader().load( 'assets/speaker.jpg' );
+        var materialBocinaIzq = new THREE.MeshBasicMaterial({map: textureBocinaIzq });
         var meshBocinaIzq = new THREE.Mesh(bocinaIzq, materialBocinaIzq);
         meshBocinaIzq.position.set(38,5,-20);
         meshBocinaIzq.rotation.x = Math.PI / 2;
         scene.add(meshBocinaIzq);
 
-        // Left Speaker Circler
-        var righSpeakerCircle = new THREE.SphereGeometry( 3, 9, 3 );
-        var righSpeakerCircleMaterial = new THREE.MeshLambertMaterial( {color: 0xFFFFFF} );
+        // Right Speaker Down Circle
+        var righSpeakerCircle = new THREE.SphereGeometry( 2, 9, 4 );
+        const textureRighSpeakerCircle = new THREE.TextureLoader().load( 'assets/speaker_circle.jpg' );
+        var righSpeakerCircleMaterial = new THREE.MeshBasicMaterial({map: textureRighSpeakerCircle });
         var righSpeakerCircleMesh = new THREE.Mesh( righSpeakerCircle, righSpeakerCircleMaterial );
-        righSpeakerCircleMesh.position.set(-36,5,-19)
+        righSpeakerCircleMesh.position.set(-36,3,-19)
         righSpeakerCircleMesh.rotation.x = Math.PI / 2;
         scene.add( righSpeakerCircleMesh );
 
+        // Right Speaker Up Circle
+        var righSpeakerCircleUp = new THREE.SphereGeometry( 2, 9, 4 );
+        const textureRighSpeakerCircleUp = new THREE.TextureLoader().load( 'assets/speaker_circle.jpg' );
+        var righSpeakerCircleMaterialUp = new THREE.MeshBasicMaterial({map: textureRighSpeakerCircleUp });
+        var righSpeakerCircleMeshUp = new THREE.Mesh( righSpeakerCircleUp, righSpeakerCircleMaterialUp );
+        righSpeakerCircleMeshUp.position.set(-36,6,-19)
+        righSpeakerCircleMeshUp.rotation.x = Math.PI / 2;
+        scene.add( righSpeakerCircleMeshUp );
+
         // Right Speaker
         var bocinaDerecha = new THREE.BoxGeometry(5,5,10);
-        var materialBocinaDerecha = new THREE.MeshLambertMaterial({color: 0x000});
+        const textureBocinaDer = new THREE.TextureLoader().load( 'assets/speaker.jpg' );
+        var materialBocinaDerecha = new THREE.MeshBasicMaterial({map: textureBocinaDer });
         var meshBocinaDerecha = new THREE.Mesh(bocinaIzq, materialBocinaIzq);
         meshBocinaDerecha.position.set(-36,5,-20);
         meshBocinaDerecha.rotation.x = Math.PI / 2;
@@ -142,12 +206,6 @@
         light.position.set(100,100,25);
         scene.add(light)
 
-        //Object Loader
-
-        var objLoader = new OBJLoader();
-        objLoader.load('/assets/People.obj', function(object){
-            //scene.add(object);
-        })
         
         // Render function
         var render =  function(){
