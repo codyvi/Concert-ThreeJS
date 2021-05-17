@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/102/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+    <script src="js/mtl.js"></script>
+    <script src="js/obj.js"></script>
     <script type="module">
         import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js'; 
-        import { OBJLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/OBJLoader.js';
-        import { MTLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/MTLLoader.js';
+
 
         
         let scene = new THREE.Scene();
@@ -28,18 +29,27 @@
         camera.position.y = 5;
         camera.position.x= 5;
 
-       
+        const listener = new THREE.AudioListener();
+        camera.add( listener );
 
+    
+        const sound = new THREE.Audio( listener );
+        sound.autoplay  = true;
 
+        const audioLoader = new THREE.AudioLoader();
+            audioLoader.load( 'assets/Eva.ogg', function( buffer ) {
+                sound.setBuffer( buffer );
+                sound.setLoop( true );
+                sound.setVolume( 0.5 );
+                sound.play();
+            });
 
+    
         let renderer = new THREE.WebGLRenderer({antialias: true});
         renderer.setClearColor("#e5e5e5");
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         document.body.appendChild(renderer.domElement)
-
-        const controls = new OrbitControls( camera, renderer.domElement );
-        controls.update();
 
 
         window.addEventListener('resize', () =>{
@@ -47,7 +57,10 @@
             camera.aspect = window.innerWidth / window.innerHeight;
 
             camera.updateProjectionMatrix();
-        })
+        });
+
+        const controls = new OrbitControls( camera, renderer.domElement );
+        //controls.update();
 
         // Create plane
         var plane = new THREE.BoxGeometry(100, 1,100);
@@ -57,22 +70,7 @@
         var meshPlane = new THREE.Mesh(plane, materialPlane)
         scene.add(meshPlane);
 
-        //Object Loader
-        var mtlLoader = new MTLLoader();
-	    mtlLoader.load("/assets/Tent_Poles_01.mtl", function(materials){
-            materials.preload();
-            var objLoader = new OBJLoader();
-            objLoader.setMaterials(materials);
-            objLoader.load('/assets/Tent_Poles_01.obj', function(object){
-                console.log('Object:')
-                console.log(object);
-                //scene.add(object);
-                //object.position.set(-5, 0, 4);
-            });
-        });
-
-
-
+ 
         // Create the scene of the concert
         var escenarioBase = new THREE.BoxGeometry(80,1,25);
         const textureBase = new THREE.TextureLoader().load( 'assets/concert_plane.jpg' );
@@ -87,7 +85,6 @@
         var meshEscenarioAtras = new THREE.Mesh(escenarioAtras, materialEscenarioAtras);
         meshEscenarioAtras.position.set(1,12,-48)
         meshEscenarioAtras.rotation.x = Math.PI / 2;
-        console.log(meshEscenarioAtras);
         scene.add(meshEscenarioAtras);
 
         // Create the scene top
@@ -207,10 +204,55 @@
         scene.add(light)
 
         
+        //Object Loader
+        var mtlLoader = new THREE.MTLLoader();
+	    mtlLoader.load("assets/roblox.mtl", function(materials){
+            materials.preload();
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.load('assets/roblox.obj', function(object){
+                let object2;
+                let object3;
+                scene.add(object);
+                object.position.set(10, 1.6, -20);
+                object.scale.x = 2;
+                object.scale.y = 2;
+                object.scale.z = 2;
+                object2 = object.clone();
+                scene.add(object2);
+                object2.position.set(-5, 1.6, -20);
+                object3 = object.clone();
+                scene.add(object3);
+                object3.position.set(25, 1.6, -20);
+                let offset = 15;
+                for(var i =0; i < 5; i++){
+                    var newObject = object.clone();
+                    scene.add(newObject);
+                    if(i%2 === 0){
+                        let x = Math.floor(Math.random() * 4)+1
+                        console.log(x)
+                        x = 2*x
+                        newObject.position.set(i*x,1.6,10)
+                    }
+                    else{
+                        let x = Math.floor(Math.random() * 4)+1
+                        console.log(x)
+                        x = 2*x
+                        newObject.position.set(i*x,1.6,20)
+                    }
+                    
+                }
+            });
+        });
+
+
+
+
+        
         // Render function
         var render =  function(){
             requestAnimationFrame(render); 
-            controls.update(); 
+            //controls.update(); 
             renderer.render(scene,camera);
         }
         render();
