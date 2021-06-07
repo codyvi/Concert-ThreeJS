@@ -63,11 +63,12 @@
         //controls.update();
 
         // Create plane
-        var plane = new THREE.BoxGeometry(100, 1,100);
+        var plane = new THREE.BoxGeometry(100, 150,100);
         const texturePlane = new THREE.TextureLoader().load( 'assets/grass.jpg' );
         //var materialPlane = new THREE.MeshLambertMaterial({color: 0x7cfc00 });
         var materialPlane = new THREE.MeshBasicMaterial({map: texturePlane });
         var meshPlane = new THREE.Mesh(plane, materialPlane)
+        meshPlane.position.set(1,-74,1)
         scene.add(meshPlane);
 
  
@@ -202,7 +203,11 @@
         var light = new THREE.PointLight(0xFFFFFF,1,500);
         light.position.set(100,100,25);
         scene.add(light)
-
+        
+        const slight = new THREE.DirectionalLight( 0xffffff, 1, 100 );
+        slight.position.set( 1, 1, 1 ); //default; light shining from top
+        slight.castShadow = true; // default false
+        scene.add( slight );
         
         //Object Loader
         var mtlLoader = new THREE.MTLLoader();
