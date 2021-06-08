@@ -14,6 +14,7 @@
     <script src="js/obj.js"></script>
     <script type="module">
         import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/controls/OrbitControls.js'; 
+        import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.117.1/examples/jsm/loaders/FBXLoader.js';
 
 
         
@@ -210,12 +211,13 @@
         scene.add( slight );
         
         //Object Loader
+        //Objeto externo obtenido de: https://clara.io/view/1b0591ed-5570-4c19-8a15-18a9b339093a
         var mtlLoader = new THREE.MTLLoader();
-	    mtlLoader.load("assets/roblox.mtl", function(materials){
+	    mtlLoader.load("assets/minecraft-steve.mtl", function(materials){
             materials.preload();
             var objLoader = new THREE.OBJLoader();
             objLoader.setMaterials(materials);
-            objLoader.load('assets/roblox.obj', function(object){
+            objLoader.load('assets/Steve.obj', function(object){
                 let object2;
                 let object3;
                 scene.add(object);
@@ -230,8 +232,15 @@
                 scene.add(object3);
                 object3.position.set(25, 1.6, -20);
                 let offset = 15;
-                for(var i =0; i < 5; i++){
+                for(var i =0; i < 1; i++){
+                    const anim = new FBXLoader();
                     var newObject = object.clone();
+                    anim.load('assets/Dance.fbx', (anim) =>{
+                        let mixer = new THREE.AnimationMixer(anim);
+                        const idle = mixer.clipAction(anim.animations[0]);
+                        idle.play();
+                    });
+                    
                     scene.add(newObject);
                     if(i%2 === 0){
                         let x = Math.floor(Math.random() * 4)+1
