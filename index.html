@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+
+    <!-- Audio Bar Setup -->
+    <audio controls>
+        <source src="assets/resistencia.ogg" type="audio/ogg">
+        <!-- <source src="resistencia.mp3" type="audio/mpeg"> -->
+        Your browser does not support the audio element.
+    </audio>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
     <script src="js/mtl.js"></script>
@@ -29,22 +37,6 @@
         camera.position.z = 105;
         camera.position.y = 5;
         camera.position.x= 5;
-
-        const listener = new THREE.AudioListener();
-        camera.add( listener );
-
-    
-        const sound = new THREE.Audio( listener );
-        sound.autoplay  = true;
-
-        const audioLoader = new THREE.AudioLoader();
-            audioLoader.load( 'assets/Eva.ogg', function( buffer ) {
-                sound.setBuffer( buffer );
-                sound.setLoop( true );
-                sound.setVolume( 0.5 );
-                sound.play();
-            });
-
     
         let renderer = new THREE.WebGLRenderer({antialias: true});
         renderer.setClearColor("#e5e5e5");
